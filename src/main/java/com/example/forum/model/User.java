@@ -1,5 +1,6 @@
 package com.example.forum.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,15 +33,20 @@ public class User {
     @NotBlank(message = "Email are required")
     @Email(message = "Invalid email format")
     private String email;
+
+    @JsonIgnore
     @NotBlank(message = "Password are required")
     private String password;
 
+    @JsonIgnore
     @Past(message = "Birthday must be in the past")
     private LocalDate birthday;
 
+    @JsonIgnore
     @CreationTimestamp
     private LocalDate created_at;
 
+    @JsonIgnore
     @UpdateTimestamp
     private LocalDate updated_at;
 }

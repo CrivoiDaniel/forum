@@ -1,5 +1,7 @@
 package com.example.forum.service;
 
+import com.example.forum.dto.PostRequest;
+import com.example.forum.dto.PostResponse;
 import com.example.forum.model.Post;
 import com.example.forum.model.User;
 import com.example.forum.repository.PostRepository;
@@ -17,9 +19,14 @@ public class PostService {
     private PostRepository postRepository;
 
     @CacheEvict(value = "posts", allEntries = true)
-    public Post createPost(Post post, User user) throws ExecutionException, InterruptedException {
+    public PostResponse createPost(PostRequest request, User user) throws ExecutionException, InterruptedException {
+        Post post = new Post();
+        post.setTitle(request.getTitle());
+        post.setContent(request.getContent());
         post.setUser(user);
-        return postRepository.save(post);
+        Post saved = postRepository.save(post);
+
+        return new PostResponse(saved.getId(),saved.getTitle(), saved.getContent(), saved.getUser(), saved.getCreated_at());
     }
     @Cacheable("posts")
     public List<Post> getAllPosts() throws  ExecutionException, InterruptedException {

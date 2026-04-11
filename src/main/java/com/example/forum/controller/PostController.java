@@ -1,5 +1,7 @@
 package com.example.forum.controller;
 
+import com.example.forum.dto.PostRequest;
+import com.example.forum.dto.PostResponse;
 import com.example.forum.model.Post;
 import com.example.forum.model.User;
 import com.example.forum.service.PostService;
@@ -7,6 +9,7 @@ import com.example.forum.service.UserService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,11 +25,11 @@ public class PostController {
     private UserService userService;
 
     @PostMapping
-    public Post createPost(@Valid  @RequestBody Post post, Authentication authentication) throws ExecutionException, InterruptedException {
+    public ResponseEntity<PostResponse> createPost(@Valid  @RequestBody PostRequest request, Authentication authentication) throws ExecutionException, InterruptedException {
         String email = authentication.getName();
         User user = userService.findByEmail(email);
 
-        return postService.createPost(post, user);
+        return ResponseEntity.ok(postService.createPost(request,user));
     }
 
     @GetMapping
