@@ -36,6 +36,12 @@ public class PostService {
     public List<Post> getPostByUser(User user) throws ExecutionException, InterruptedException {
         return postRepository.findByUserId(user.getId());
     }
+
+    @Cacheable("posts")
+    public Post getPostById(Long postId) throws ExecutionException, InterruptedException {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+    }
     @CacheEvict(value = "posts", allEntries = true)
     public Post updatePost(Post updatedPost, Long id, User user) throws ExecutionException, InterruptedException {
         Post existingPost = postRepository.findById(id)

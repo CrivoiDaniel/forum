@@ -38,10 +38,15 @@ public class PostController {
     }
 
     @GetMapping("/my-posts")
-    public List<Post> getPostById(Authentication authentication) throws  ExecutionException, InterruptedException {
+    public List<Post> getPostByUser(Authentication authentication) throws  ExecutionException, InterruptedException {
         String email = authentication.getName();
         User user = userService.findByEmail(email);
         return  postService.getPostByUser(user);
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<Post> getPostById(@PathVariable Long postId) throws ExecutionException, InterruptedException {
+        return ResponseEntity.ok(postService.getPostById(postId));
     }
 
     @PutMapping("/{id}")

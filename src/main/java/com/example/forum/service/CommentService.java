@@ -22,7 +22,7 @@ public class CommentService {
     @Autowired
     private PostRepository postRepository;
 
-    @CacheEvict(value = "posts", allEntries = true)
+    @CacheEvict(value = "comments", allEntries = true)
     public CommentResponse createComment(CommentRequest request, Long postId, User user) throws ExecutionException, InterruptedException {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
@@ -35,7 +35,7 @@ public class CommentService {
 
         return new CommentResponse(saved.getId(), saved.getMessage(), saved.getPost(), saved.getUser(), saved.getCreate_at());
     }
-    @Cacheable("comments")
+    @Cacheable(value = "comments", key = "#postId")
     public List<CommentResponse> getAllCommentsByPost(Long postId) throws ExecutionException, InterruptedException {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
@@ -44,7 +44,7 @@ public class CommentService {
                 .map(comment -> new CommentResponse(comment.getId(), comment.getMessage(), comment.getPost(), comment.getUser(), comment.getCreate_at()))
                 .toList();
     }
-    @CacheEvict(value = "posts", allEntries = true)
+    @CacheEvict(value = "comments", allEntries = true)
     public CommentResponse updateComment(CommentRequest request, Long id, User user) throws ExecutionException, InterruptedException {
         Comment existingComment = commentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
@@ -58,7 +58,7 @@ public class CommentService {
         return new CommentResponse(saved.getId(), saved.getMessage(), saved.getPost(), saved.getUser(), saved.getCreate_at());
     }
 
-    @CacheEvict(value = "posts", allEntries = true)
+    @CacheEvict(value = "comments", allEntries = true)
     public void deleteComment(Long id, User user) throws ExecutionException, InterruptedException {
         Comment existingComment = commentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));

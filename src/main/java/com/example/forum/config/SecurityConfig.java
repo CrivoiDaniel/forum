@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/posts").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/posts/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/posts/{postId}/comments").permitAll()
                         .anyRequest().authenticated()
                 )
